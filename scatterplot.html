@@ -36,11 +36,12 @@
         #tooltip span {
             margin: 0;
             font-family: sans-serif;
-            font-size: 12px;
+            font-size: 11px;
+            line-height: 16px;
         }
 
-        #mag { font-weight: bold; }
-        #place { }
+        #mag { font-weight: bold; color: #fff; padding: 3px; text-shadow: 0px 0px 1px #ccc; }
+        #place { color: #555; }
 
     </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.js"></script>
@@ -50,8 +51,6 @@
         var w = 600,
             h = 400,
             padding = 30;
-
-        var svg = d3.select('body').selectAll('svg');
 
         d3.json('http://localhost:8080/all/day', function(error, data) {
             if( !data ) throw new Error('No data!');
@@ -69,9 +68,6 @@
                             ])
                             .range([padding, w]);
                             //.tickFormat(d3.time.format("%H:%M"));
-
-
-            //debugger;
 
             // magnitude
             var yScale = d3.scale.linear()
@@ -124,9 +120,12 @@
                     //Update the tooltip position and value
                     d3.select("#tooltip")
                         .style("left", xPosition + "px")
-                        .style("top", yPosition + "px")
-                    d3.select("#tooltip").select("#mag")
-                            .text(d.properties.mag)
+                        .style("top", yPosition + "px");
+                    d3.select("#tooltip")
+                        .select("#mag")
+                            .attr('style', function() { return 'background-color: ' + colorScale(d.properties.mag); })
+                            .text(d.properties.mag);
+
 
                     d3.select("#tooltip").select('#place')
                             .text(d.properties.place);
